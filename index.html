@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIMULASI UJIAN BAHASA INDONESIA KELAS 9 SMP</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            border-left: 8px solid #2c3e50;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        .header h2 {
+            color: #3498db;
+            font-weight: normal;
+        }
+        .info-box {
+            background: #e8f4fc;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border-left: 5px solid #3498db;
+        }
+        .soal {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 12px;
+            border: 1px solid #eee;
+            transition: all 0.3s ease;
+        }
+        .soal:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            background: #f0f8ff;
+        }
+        .soal-number {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            width: 32px;
+            height: 32px;
+            line-height: 32px;
+            text-align: center;
+            border-radius: 50%;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        .soal-text {
+            font-size: 1.05em;
+            line-height: 1.6;
+            margin: 15px 0;
+        }
+        .pilihan {
+            margin: 10px 0;
+            padding: 12px 15px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+        }
+        .pilihan:hover {
+            border-color: #3498db;
+            background: #f0f8ff;
+        }
+        .pilihan.selected {
+            border-color: #2ecc71;
+            background: #e8f8ef;
+        }
+        .huruf-jawaban {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            background: #7f8c8d;
+            color: white;
+            text-align: center;
+            line-height: 28px;
+            border-radius: 50%;
+            margin-right: 15px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        .pilihan.selected .huruf-jawaban {
+            background: #27ae60;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px dashed #ccc;
+        }
+        button {
+            padding: 14px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        #kumpulkan {
+            background: linear-gradient(to right, #2ecc71, #27ae60);
+            color: white;
+        }
+        #kumpulkan:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(46, 204, 113, 0.4);
+        }
+        #reset {
+            background: #f1f2f6;
+            color: #333;
+            border: 2px solid #ddd;
+        }
+        #reset:hover {
+            background: #e4e5e9;
+        }
+        #hasil {
+            display: none;
+            margin-top: 40px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border: 2px solid #3498db;
+        }
+        .score-box {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        .score-value {
+            font-size: 4em;
+            font-weight: bold;
+            color: #2ecc71;
+            margin: 10px 0;
+        }
+        .kunci-item {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+        }
+        .kunci-item.correct {
+            background: #e8f8ef;
+        }
+        .kunci-item.wrong {
+            background: #ffeaea;
+        }
+        .nomor-kunci {
+            font-weight: bold;
+            width: 30px;
+        }
+        .jawaban-kunci {
+            margin-left: 20px;
+            flex-grow: 1;
+        }
+        .status-kunci {
+            font-weight: bold;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+        .correct .status-kunci {
+            background: #2ecc71;
+            color: white;
+        }
+        .wrong .status-kunci {
+            background: #e74c3c;
+            color: white;
+        }
+        .timer {
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            background: #fff3cd;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ffeaa7;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            .controls {
+                flex-direction: column;
+                gap: 15px;
+            }
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>SIMULASI UJIAN BAHASA INDONESIA</h1>
+            <h2>Kelas 9 SMP - Semester Genap</h2>
+        </div>
+        
+        <div class="info-box">
+            <p><strong>📋 Petunjuk:</strong></p>
+            <ol>
+                <li>Pilih satu jawaban yang paling benar dengan mengklik pilihan A, B, C, atau D.</li>
+                <li>Waktu pengerjaan: <strong>60 menit</strong>.</li>
+                <li>Jumlah soal: <strong>15 butir</strong> pilihan ganda.</li>
+                <li>Setelah selesai, klik tombol <strong>"Kumpulkan Jawaban"</strong> untuk melihat nilai.</li>
+                <li>Gunakan tombol <strong>"Reset Ujian"</strong> untuk mengulang dari awal.</li>
+            </ol>
+        </div>
+        
+        <div class="timer" id="timer">
+            ⏳ Waktu Tersisa: <span id="waktu">60:00</span>
+        </div>
+        
+        <div id="soal-container">
+            <!-- Soal akan dimuat di sini oleh JavaScript -->
+        </div>
+        
+        <div class="controls">
+            <button id="reset" onclick="resetUjian()">🔄 Reset Ujian</button>
+            <button id="kumpulkan" onclick="kumpulkanJawaban()">📥 Kumpulkan Jawaban</button>
+        </div>
+        
+        <div id="hasil">
+            <!-- Hasil akan ditampilkan di sini -->
+        </div>
+    </div>
+
+    <script>
+        // Data soal dan kunci jawaban
+        const soalUjian = [
+            {
+                soal: "Bacalah teks berikut dengan saksama!<br><br><em>'Upaya pelestarian lingkungan harus dimulai dari diri sendiri. Salah satu caranya adalah dengan mengurangi penggunaan plastik sekali pakai. Dengan membawa tas belanja sendiri, kita telah berkontribusi menyelamatkan bumi dari tumpukan sampah yang mencemari tanah dan laut.'</em><br><br>Ide pokok paragraf tersebut adalah...",
+                pilihan: [
+                    "Pencemaran tanah dan laut oleh sampah plastik.",
+                    "Manfaat membawa tas belanja sendiri.",
+                    "Upaya pelestarian lingkungan dimulai dari diri sendiri.",
+                    "Plastik sekali pakai harus dilarang."
+                ],
+                kunci: "C"
+            },
+            {
+                soal: "Kalimat yang menggunakan konjungsi temporal adalah...",
+                pilihan: [
+                    "Ibu memasak di dapur, sedangkan ayah membaca koran.",
+                    "Sebelum berangkat sekolah, Rina selalu sarapan.",
+                    "Baik Andi maupun Budi tidak hadir dalam rapat.",
+                    "Dia tidak hanya pandai, tetapi juga rendah hati."
+                ],
+                kunci: "B"
+            },
+            {
+                soal: "Kata 'berkontribusi' pada teks soal nomor 1 memiliki makna yang paling dekat dengan...",
+                pilihan: [
+                    "Mencemari",
+                    "Menyebabkan",
+                    "Memberi sumbangsih",
+                    "Mengurangi"
+                ],
+                kunci: "C"
+            },
+            {
+                soal: "Surat undangan resmi yang dikeluarkan oleh suatu instansi untuk menghadiri suatu acara disebut...",
+                pilihan: [
+                    "Surat pribadi",
+                    "Surat dinas",
+                    "Surat niaga",
+                    "Memorandum"
+                ],
+                kunci: "B"
+            },
+            {
+                soal: "Perhatikan kutipan cerpen berikut!<br><br><em>'Dengan hati berdebar-debar, ia mengintip dari balik pintu. Suara tangis itu semakin jelas. Tanpa pikir panjang, ia mendorong pintu kamar adiknya...'</em><br><br>Sudut pandang yang digunakan pengarang dalam kutipan tersebut adalah...",
+                pilihan: [
+                    "Orang pertama pelaku utama",
+                    "Orang pertama pelaku sampingan",
+                    "Orang ketiga serbatahu",
+                    "Orang ketiga pengamat"
+                ],
+                kunci: "C"
+            },
+            {
+                soal: "Tujuan dari teks eksplanasi adalah...",
+                pilihan: [
+                    "Memengaruhi pembaca",
+                    "Menceritakan suatu peristiwa",
+                    "Menggambarkan suatu objek",
+                    "Menjelaskan proses terjadinya suatu fenomena"
+                ],
+                kunci: "D"
+            },
+            {
+                soal: "Kalimat poster yang tepat untuk kampanye hemat air adalah...",
+                pilihan: [
+                    "Air adalah sumber kehidupan. Hematlah penggunaannya!",
+                    "Jangan biarkan keran terbuka!",
+                    "Mari kita menikmati kesegaran air.",
+                    "Air sangat penting bagi tubuh kita."
+                ],
+                kunci: "A"
+            },
+            {
+                soal: "Ciri-ciri puisi baru adalah...",
+                pilihan: [
+                    "Terikat aturan jumlah baris, rima, dan bait.",
+                    "Bebas tanpa aturan.",
+                    "Menggunakan bahasa klise dan majas terbatas.",
+                    "Biasanya berupa cerita naratif yang panjang."
+                ],
+                kunci: "A"
+            },
+            {
+                soal: "Perhatikan data buku berikut!<br><br><ul><li>Judul: Laskar Pelangi</li><li>Penulis: Andrea Hirata</li><li>Penerbit: Bentang Pustaka</li><li>Tahun Terbit: 2005</li><li>Tebal Buku: 529 halaman</li></ul><br>Penulisan daftar pustaka yang tepat dari data tersebut adalah...",
+                pilihan: [
+                    "Hirata, Andrea. 2005. <em>Laskar Pelangi</em>. Yogyakarta: Bentang Pustaka.",
+                    "Andrea Hirata. <em>Laskar Pelangi</em>. Bentang Pustaka: 2005.",
+                    "Hirata, Andrea. <em>Laskar Pelangi</em>. Yogyakarta: Bentang Pustaka, 2005.",
+                    "Andrea, Hirata. 2005. <em>Laskar Pelangi</em>. Yogyakarta: Bentang Pustaka."
+                ],
+                kunci: "A"
+            },
+            {
+                soal: "'Rumah itu telah <strong>dikunjungi</strong> oleh tim surveyor.'<br><br>Kata yang dicetak tebal merupakan contoh kata kerja...",
+                pilihan: [
+                    "Transitif",
+                    "Intransitif",
+                    "Pasif",
+                    "Aktif"
+                ],
+                kunci: "C"
+            },
+            {
+                soal: "Teks yang bertujuan untuk mendeskripsikan objek secara subjektif sehingga pembaca seolah-olah merasakan apa yang dirasakan penulis disebut...",
+                pilihan: [
+                    "Teks Deskripsi",
+                    "Teks Eksposisi",
+                    "Teks Narasi",
+                    "Teks Persuasi"
+                ],
+                kunci: "A"
+            },
+            {
+                soal: "Perhatikan iklan berikut!<br><br><em>'Dapatkan tubuh sehat dan ideal dengan FITFAM! Olahraga 30 menit sehari, hasil terlihat dalam 2 minggu. Hubungi: 0812-3456-7890.'</em><br><br>Unsur yang tidak terdapat dalam iklan tersebut adalah...",
+                pilihan: [
+                    "Nama produk",
+                    "Kalimat persuasif",
+                    "Harga produk",
+                    "Kontak person"
+                ],
+                kunci: "C"
+            },
+            {
+                soal: "Amanat yang tepat untuk cerita fabel tentang semut dan merpati adalah...",
+                pilihan: [
+                    "Jangan sombong dengan kekuatan sendiri.",
+                    "Tolong-menolonglah kepada siapa pun.",
+                    "Bersikap bijaksanalah dalam mengambil keputusan.",
+                    "Kekuatan persatuan sangatlah penting."
+                ],
+                kunci: "B"
+            },
+            {
+                soal: "Kalimat yang menggunakan ejaan yang tepat adalah...",
+                pilihan: [
+                    "Ayah pergi ke kantor naik sepeda motor.",
+                    "Kami pergi ke rumah nenek di bandung.",
+                    "Siapakah yang membeli buku itu?",
+                    "Raisa menyanyikan lagu 'Anganku Anganmu'."
+                ],
+                kunci: "C"
+            },
+            {
+                soal: "Jenis karangan yang menceritakan kembali isi suatu buku atau film dengan bahasa sendiri disebut...",
+                pilihan: [
+                    "Resensi",
+                    "Sinopsis",
+                    "Ikhtisar",
+                    "Ringkasan"
+                ],
+                kunci: "B"
+            }
+        ];
+
+        // Variabel untuk menyimpan jawaban user
+        let jawabanUser = new Array(soalUjian.length).fill(null);
+        let waktuTotal = 60 * 60; // 60 menit dalam detik
+        let timerInterval;
+
+        // Fungsi untuk memulai timer
+        function mulaiTimer() {
+            const timerElement = document.getElementById('waktu');
+            timerInterval = setInterval(() => {
+                if (waktuTotal <= 0) {
+                    clearInterval(timerInterval);
+                    kumpulkanJawaban();
+                    return;
+                }
+                waktuTotal--;
+                const menit = Math.floor(waktuTotal / 60);
+                const detik = waktuTotal % 60;
+                timerElement.textContent = `${menit.toString().padStart(2, '0')}:${detik.toString().padStart(2, '0')}`;
+                
+                // Ubah warna jika waktu kurang dari 10 menit
+                if (waktuTotal < 600) {
+                    timerElement.style.color = '#e74c3c';
+                }
+            }, 1000);
+        }
+
+        // Fungsi untuk menampilkan soal
+        function tampilkanSoal() {
+            const container = document.getElementById('soal-container');
+            container.innerHTML = '';
+            
+            soalUjian.forEach((soal, index) => {
+                const soalElement = document.createElement('div');
+                soalElement.className = 'soal';
+                
+                let pilihanHTML = '';
+                const pilihanHuruf = ['A', 'B', 'C', 'D'];
+                
+                pilihanHuruf.forEach((huruf, i) => {
+                    const isSelected = jawabanUser[index] === huruf;
+                    pilihanHTML += `
+                        <div class="pilihan ${isSelected ? 'selected' : ''}" onclick="pilihJawaban(${index}, '${huruf}')">
+                            <div class="huruf-jawaban">${huruf}</div>
+                            <div>${soal.pilihan[i]}</div>
+                        </div>
+                    `;
+                });
+                
+                soalElement.innerHTML = `
+                    <div>
+                        <span class="soal-number">${index + 1}</span>
+                        <strong>Soal No. ${index + 1}</strong>
+                    </div>
+                    <div class="soal-text">${soal.soal}</div>
+                    <div>${pilihanHTML}</div>
+                `;
+                
+                container.appendChild(soalElement);
+            });
+            
+            // Mulai timer saat soal pertama dimuat
+            if (!timerInterval) {
+                mulaiTimer();
+            }
+        }
+
+        // Fungsi untuk memilih jawaban
+        function pilihJawaban(index, huruf) {
+            jawabanUser[index] = huruf;
+            tampilkanSoal();
+        }
+
+        // Fungsi untuk mengumpulkan jawaban
+        function kumpulkanJawaban() {
+            clearInterval(timerInterval);
+            
+            let score = 0;
+            const hasilHTML = [];
+            
+            soalUjian.forEach((soal, index) => {
+                const userAnswer = jawabanUser[index];
+                const isCorrect = userAnswer === soal.kunci;
+                if (isCorrect) score++;
+                
+                hasilHTML.push(`
+                    <div class="kunci-item ${isCorrect ? 'correct' : 'wrong'}">
+                        <div class="nomor-kunci">${index + 1}.</div>
+                        <div class="jawaban-kunci">
+                            <strong>Jawaban Anda:</strong> ${userAnswer ? userAnswer : 'Tidak dijawab'}<br>
+                            <strong>Kunci Jawaban:</strong> ${soal.kunci}
+                        </div>
+                        <div class="status-kunci">
+                            ${isCorrect ? 'BENAR' : 'SALAH'}
+                        </div>
+                    </div>
+                `);
+            });
+            
+            const nilaiAkhir = Math.round((score / soalUjian.length) * 100);
+            
+            document.getElementById('hasil').innerHTML = `
+                <h2>📊 Hasil Simulasi Ujian</h2>
+                <div class="score-box">
+                    <p>Nilai Anda:</p>
+                    <div class="score-value">${nilaiAkhir}</div>
+                    <p>${score} dari ${soalUjian.length} soal terjawab benar</p>
+                    <p>Persentase: ${nilaiAkhir}%</p>
+                </div>
+                <h3>🔍 Pembahasan Jawaban:</h3>
+                <div id="daftar-kunci">
+                    ${hasilHTML.join('')}
+                </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <button onclick="resetUjian()" style="background: #3498db; color: white;">🔄 Coba Lagi</button>
+                </div>
+            `;
+            
+            document.getElementById('hasil').style.display = 'block';
+            document.getElementById('kumpulkan').disabled = true;
+            
+            // Scroll ke hasil
+            document.getElementById('hasil').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Fungsi untuk reset ujian
+        function resetUjian() {
+            jawabanUser = new Array(soalUjian.length).fill(null);
+            waktuTotal = 60 * 60;
+            clearInterval(timerInterval);
+            timerInterval = null;
+            
+            document.getElementById('hasil').style.display = 'none';
+            document.getElementById('kumpulkan').disabled = false;
+            document.getElementById('waktu').style.color = '#2c3e50';
+            document.getElementById('waktu').textContent = '60:00';
+            
+            tampilkanSoal();
+        }
+
+        // Inisialisasi saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', tampilkanSoal);
+    </script>
+</body>
+</html>
